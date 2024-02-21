@@ -8,7 +8,7 @@ import { RouterLink } from 'vue-router'
     <div class="wrapper">
       <nav class="bg-pr-white shadow-[0_3px_12px_0_rgba(0,0,0,0.2)] fixed top-0 w-full">
         <div class="flex flex-wrap items-center justify-between max-w-screen-xl p-6 mx-auto">
-          <RouterLink :to="{ name:'landing' }" class="flex items-center space-x-3 rtl:space-x-reverse">
+          <RouterLink :to="{ name:'recsRecs' }" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="../assets/logo1.svg" class="h-12" alt="EZ Meals Logo" />
           </RouterLink>
           <div class="flex w-2/5 md:order-1">
@@ -39,7 +39,7 @@ import { RouterLink } from 'vue-router'
                 <input
                   type="text"
                   id="search-navbar"
-                  class="w-10/12 p-2 rounded-l-lg ps-10 bg-pr-white"
+                  class="w-10/12 p-2 bg-gray-100 rounded-l-lg ps-10"
                   placeholder="What are you looking for?"
                 />
                 <button
@@ -68,7 +68,7 @@ import { RouterLink } from 'vue-router'
               <li>
                 <RouterLink
                   :to="{ name:'signup'}"
-                  class="block px-3 py-1 transition border-4 rounded-lg bg-pr-light-blue text-pr-white border-pr-light-blue hover:bg-pr-dark-blue hover:border-pr-dark-blue"
+                  class="block px-3 py-1 transition border-4 rounded-lg bg-pr-dark-blue text-pr-white border-pr-dark-blue hover:bg-pr-light-blue hover:border-pr-light-blue"
                   >Sign up</RouterLink
                 >
               </li>
