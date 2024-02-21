@@ -8,9 +8,9 @@ import { RouterLink } from 'vue-router'
     <div class="wrapper">
       <nav class="bg-pr-white shadow-[0_3px_12px_0_rgba(0,0,0,0.2)] fixed top-0 w-full">
         <div class="flex flex-wrap items-center justify-between max-w-screen-xl p-6 mx-auto">
-          <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+          <RouterLink :to="{ name:'landing' }" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="../assets/logo1.svg" class="h-12" alt="EZ Meals Logo" />
-          </a>
+          </RouterLink>
           <div class="flex w-2/5 md:order-1">
             <div class="relative hidden w-full md:block">
               <div class="absolute inset-y-0 flex items-center pointer-events-none start-0 ps-3">

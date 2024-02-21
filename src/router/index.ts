@@ -9,7 +9,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'landing',
-      component: LandingPageVue
+      component: LandingPageVue,
     },
     {
       path: '/login',

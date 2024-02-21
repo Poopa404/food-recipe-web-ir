@@ -11,9 +11,9 @@
       class="flex items-center justify-center w-full h-screen px-6 bg-pr-white md:max-w-md lg:max-w-full md:mx-0 md:w-1/2 xl:w-1/3 lg:px-16 xl:px-12"
     >
       <div class="w-full h-100">
-        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <RouterLink :to="{ name:'landing' }" class="flex items-center space-x-3 rtl:space-x-reverse">
           <img src="../assets/logo1.svg" class="h-20" alt="EZ Meals Logo" />
-        </a>
+        </RouterLink>
 
         <h1 class="pl-2 mt-12 text-xl font-bold leading-tight md:text-2xl">
           Sign up your account
@@ -49,7 +49,7 @@
 
           <button
             type="submit"
-            class="block w-full px-4 py-3 mt-6 font-semibold rounded-lg bg-pr-light-pink text-pr-white hover:bg-pr-dark-pink focus:bg-pr-dark-pink"
+            class="block w-full px-4 py-3 mt-6 font-semibold rounded-lg bg-pr-light-blue text-pr-white hover:bg-pr-dark-blue focus:bg-pr-dark-blue"
           >
             Register
           </button>
