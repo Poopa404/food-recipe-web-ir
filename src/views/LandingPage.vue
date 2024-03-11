@@ -79,7 +79,7 @@ function handleActionClick(action: any) {
         </RouterLink>
         <RouterLink
           :to="{ name: 'recsGeneral' }"
-          class="px-3 py-1 mr-6 transition border-2 rounded-lg text-mdfont-medium hover:text-pr-white border-pr-dark-blue text-pr-dark-blue hover:bg-pr-dark-blue"
+          class="px-3 py-1 mr-6 font-medium transition border-2 rounded-lg text-md hover:text-pr-white border-pr-dark-blue text-pr-dark-blue hover:bg-pr-dark-blue"
           exact-active-class="bg-pr-dark-blue"
         >
           <p>General</p>
