@@ -2,7 +2,7 @@
 
 <template>
   <!-- component -->
-  <section class="flex flex-col items-center h-screen text-gray-900 md:flex-row">
+  <section class="flex flex-col items-center h-screen text-gray-900 md:flex-row bg-pr-white">
     <div class="hidden w-full h-screen lg:block md:w-1/2 xl:w-2/3">
       <img src="../assets/loginImage.jpg" alt="" class="object-cover w-full h-full" />
     </div>

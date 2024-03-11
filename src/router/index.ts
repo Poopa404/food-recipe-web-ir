@@ -4,6 +4,7 @@ import LoginPageVue from '@/views/LoginPage.vue'
 import SignupPageVue from '@/views/SignupPage.vue'
 import SearchPageVue from '@/views/SearchPage.vue'
 import RecsViewVue from '@/views/recs/RecsView.vue'
+import RecipePage from '@/views/RecipePage.vue'
 
 const folderList = [
   {
@@ -56,7 +57,7 @@ const router = createRouter({
       path: '/',
       name: 'landing',
       component: LandingPageVue,
-      children: childrenTag
+      children: childrenTag,
     },
     {
       path: '/search',
@@ -64,14 +65,19 @@ const router = createRouter({
       component: SearchPageVue,
     },
     {
+      path: '/recipe',
+      name: 'recipe',
+      component: RecipePage,
+    },
+    {
       path: '/login',
       name: 'login',
-      component: LoginPageVue
+      component: LoginPageVue,
     },
     {
       path: '/signup',
       name: 'signup',
-      component: SignupPageVue
+      component: SignupPageVue,
     }
   ]
 })

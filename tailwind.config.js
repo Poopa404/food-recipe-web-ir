@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        'pr-white': '#F9F9F9',
+        'pr-white': '#F0F0F0',
         'pr-dark-blue': '#5AA9E6',
         'pr-light-blue': '#7FC8F8',
         'pr-light-orange': '#FFA630',

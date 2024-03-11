@@ -6,7 +6,7 @@ import { RouterLink } from 'vue-router'
 <template>
   <header>
     <div class="wrapper">
-      <nav class="bg-pr-white shadow-[0_3px_12px_0_rgba(0,0,0,0.2)] fixed top-0 w-full">
+      <nav class="bg-pr-white shadow-[0_3px_12px_0_rgba(0,0,0,0.2)] fixed top-0 w-full z-20 max-h-24">
         <div class="flex flex-wrap items-center justify-between max-w-screen-xl p-6 mx-auto">
           <RouterLink :to="{ name:'recsRecs' }" class="flex items-center space-x-3 rtl:space-x-reverse">
             <img src="../assets/logo1.svg" class="h-12" alt="EZ Meals Logo" />
@@ -61,14 +61,14 @@ import { RouterLink } from 'vue-router'
               <li>
                 <RouterLink
                 :to="{ name:'login'}"
-                  class="block px-3 py-1 transition bg-transparent border-4 rounded-lg text-pr-light-pink border-pr-light-pink hover:bg-pr-light-pink hover:text-pr-white"
+                  class="block px-3 py-1 transition bg-transparent border-2 rounded-lg text-pr-light-pink border-pr-light-pink hover:bg-pr-light-pink hover:text-pr-white"
                   >Log in</RouterLink
                 >
               </li>
               <li>
                 <RouterLink
                   :to="{ name:'signup'}"
-                  class="block px-3 py-1 transition border-4 rounded-lg bg-pr-dark-blue text-pr-white border-pr-dark-blue hover:bg-pr-light-blue hover:border-pr-light-blue"
+                  class="block px-3 py-1 transition border-2 rounded-lg bg-pr-dark-blue text-pr-white border-pr-dark-blue hover:bg-pr-light-blue hover:border-pr-light-blue"
                   >Sign up</RouterLink
                 >
               </li>
