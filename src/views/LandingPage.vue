@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import recipeModalVue from '@/components/RecipeModal.vue'
 import navBarVue from '@/components/NavBar.vue'
 import { ref } from 'vue'
 import ContextMenu from '@/components/ContextMenu.vue'
+import { onClickOutside } from '@vueuse/core'
+import { useAuthStore } from '@/stores/auth';
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const folderList = ref([
   {
@@ -25,12 +31,6 @@ const folderList = ref([
 ])
 
 const number = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-const users = ref([
-  { id: 1, name: 'Alice', email: 'alice@example.com' },
-  { id: 2, name: 'Bob', email: 'bob@example.com' },
-  { id: 3, name: 'Charlie', email: 'charlie@example.com' }
-])
 
 const showMenu = ref(false)
 const menuX = ref(0)
@@ -56,11 +56,45 @@ function handleActionClick(action: any) {
   console.log(action)
   console.log(targetRow.value)
 }
+
+
+const target = ref(null)
+onClickOutside(target, event => {
+  closeContextMenu()
+})
+
+const authStore = useAuthStore()
+
+function loginAndThenSave(event: any, user: any) {
+  if(authStore.isLoggedIn){
+    showContextMenu(event,user)
+  } else {
+    router.push({ name: 'login' })
+  }
+}
+
+const isModalShown = ref(false)
+
+function showModal(){
+  if(isModalShown.value){
+    isModalShown.value = false
+  } else {
+    isModalShown.value = true
+  }
+}
+
+function closeModal(){
+  isModalShown.value = false
+}
+
 </script>
 
 <template>
+  
   <navBarVue />
+  <recipeModalVue :class="isModalShown? 'flex':'hidden'" @close-modal="closeModal"/>
   <ContextMenu
+    ref="target"
     v-if="showMenu"
     :actions="contextMenuActions"
     @action-clicked="handleActionClick"
@@ -95,16 +129,15 @@ function handleActionClick(action: any) {
           <p>{{ folder.label }}</p>
         </RouterLink>
       </div>
-      <div class="grid w-full grid-cols-4 mt-8 gap-x-4 gap-y-16">
-        <RouterLink
-          :to="{ name: 'recipe' }"
+      <div class="grid w-full grid-cols-4 mt-8 mb-8 gap-x-4 gap-y-16 ">
+        <button
+          @click="showModal"
           class="group transition hover:scale-[1.05] relative"
           v-for="num in number"
           :key="num"
         >
           <button
-            @contextmenu.prevent="showContextMenu($event,num)"
-            @click.prevent="console.log('test')"
+            @click.prevent.stop="loginAndThenSave($event,num)"
             class="absolute z-10 hidden px-2 py-2 rounded-lg hover:bg-pr-dark-pink right-2 top-2 group-hover:block bg-pr-light-pink text-pr-white"
           >
             <!-- <svg
@@ -122,7 +155,7 @@ function handleActionClick(action: any) {
           </button>
           <img src="../assets/loginImage.jpg" alt="" srcset="" class="rounded-lg" />
           <p
-            class="mt-4 text-3xl font-bold text-gray-900 group-hover:underline underline-offset-4 decoration-pr-light-orange"
+            class="mt-4 text-3xl font-bold text-left text-gray-900 group-hover:underline underline-offset-4 decoration-pr-light-orange"
           >
             Some food
           </p>
@@ -185,7 +218,7 @@ function handleActionClick(action: any) {
             </svg>
             <p class="font-medium text-gray-500">(32)</p>
           </div>
-        </RouterLink>
+        </button>
       </div>
     </div>
   </section>
@@ -215,4 +248,4 @@ function handleActionClick(action: any) {
 .overlay:hover {
   cursor: pointer;
 }
-</style>
+</style>../components/RecipePage.vue

@@ -4,7 +4,6 @@ import LoginPageVue from '@/views/LoginPage.vue'
 import SignupPageVue from '@/views/SignupPage.vue'
 import SearchPageVue from '@/views/SearchPage.vue'
 import RecsViewVue from '@/views/recs/RecsView.vue'
-import RecipePage from '@/views/RecipePage.vue'
 import ProfilePage from '@/views/ProfilePage.vue'
 
 const folderList = [
@@ -64,11 +63,6 @@ const router = createRouter({
       path: '/search',
       name: 'search',
       component: SearchPageVue,
-    },
-    {
-      path: '/recipe',
-      name: 'recipe',
-      component: RecipePage,
     },
     {
       path: '/profile',

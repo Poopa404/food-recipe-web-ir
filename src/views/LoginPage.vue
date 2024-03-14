@@ -1,4 +1,24 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router'
+
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+const router = useRouter()
+
+const username = ref('')
+const password = ref('')
+
+function login(){
+  authStore
+    .login(username.value, password.value)
+    .then(() => {
+      router.push({ name: 'landing' })
+    })
+}
+
+</script>
 
 <template>
   <!-- component -->
@@ -19,10 +39,11 @@
           Log in to your account
         </h1>
 
-        <form class="pl-2 mt-6" action="#" method="POST">
+        <form class="pl-2 mt-6"  @submit.prevent="login">
           <div>
             <label class="block text-gray-900">Username</label>
             <input
+              v-model="username"
               type="username"
               name=""
               id=""
@@ -36,11 +57,11 @@
           <div class="mt-4">
             <label class="block text-gray-900">Password</label>
             <input
+              v-model="password"
               type="password"
               name=""
               id=""
               placeholder="Enter Password"
-              minlength="6"
               class="w-full px-4 py-3 mt-2 bg-gray-100 border border-gray-200 rounded-lg focus:border-pr-dark-blue focus:bg-pr-white focus:outline-none"
               required
             />
