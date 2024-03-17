@@ -10,6 +10,7 @@ export interface Folder {
     name: string
     userAccount: User
     recipeList: string[]
+    baseFolder: boolean
 }
 
 export interface Recipe {

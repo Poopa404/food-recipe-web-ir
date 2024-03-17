@@ -53,7 +53,6 @@ function loginAndThenSave(event: any, user: any) {
 }
 
 const isModalShown = ref(false)
-const showId = ref(38)
 
 function showModal(id: number) {
   if (isModalShown.value) {

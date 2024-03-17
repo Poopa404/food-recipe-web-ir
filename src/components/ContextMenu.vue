@@ -1,7 +1,7 @@
 //ContextMenu.vue
 <template>
   <div
-      class="fixed z-50 h-1/3 context-menu"
+      class="fixed z-50 context-menu bg-pr-white"
       :style="{ top: y + 'px', left: x + 'px' }"
   >
     <div

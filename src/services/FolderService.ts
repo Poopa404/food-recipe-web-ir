@@ -22,4 +22,7 @@ export default {
         console.log(folder)
         return apiClient.post<Folder>('/folder', folder)
     },
+    deleteFolder(id: number): Promise<AxiosResponse> {
+        return apiClient.post('/folder/delete/'+id.toString())
+    },
 }
