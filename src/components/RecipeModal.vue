@@ -1,9 +1,39 @@
 <script setup lang="ts">
+import { useRecipeStore } from '@/stores/recipe'
+import moment from 'moment';
+import { useRoute } from 'vue-router';
+
+const recipeStore = useRecipeStore()
+// console.log(moment.duration('PT15M').humanize())
+
+function timeFormat(time: string){
+  return moment.duration(time).humanize()
+}
+
+function createIngList(quan: string[], parts: string[]){
+  var returnArray: {
+    q: string;
+    p: string;
+  }[] = []
+  parts.forEach((p,i) => {
+    returnArray.push({
+      q: quan[i],
+      p: p
+    })
+  })
+  return returnArray
+}
+
 </script>
 
 <template>
-  <div class="fixed z-10 w-full h-full bg-black bg-opacity-50" @click.self.stop="$emit('closeModal')">
-    <div class="w-4/5 h-[calc(100vh-8rem)] overflow-y-auto overflow-x-hidden border-4 bg-pr-white mx-auto rounded-lg mt-4">
+  <div v-if="recipeStore.currentRecipe != null"
+    class="fixed z-10 w-full h-full bg-black bg-opacity-50"
+    @click.self.stop="$emit('closeModal')"
+  >
+    <div
+      class="w-4/5 h-[calc(100vh-8rem)] overflow-y-auto overflow-x-hidden border-4 bg-pr-white mx-auto rounded-lg mt-4"
+    >
       <section
         class="flex flex-col items-center h-[calc(100vh-96px)] text-gray-900 md:flex-row bg-pr-white"
       >
@@ -12,12 +42,14 @@
         >
           <div class="flex items-center justify-center w-full h-full">
             <div class="flex flex-col w-4/5 text-center h-3/4">
-              <p class="text-5xl font-bold h-[35%] text-ellipsis overflow-hidden">
-                Low-Fat Berry Blue Frozen Dessert
+              <p class="text-4xl font-bold h-[35%] overflow-hidden line-clamp-3">
+                {{ recipeStore.currentRecipe?.Name }}
               </p>
               <div class="h-[20%]">
-                <p class="font-semibold">by Dancer</p>
-                <p class="text-xs font-normal text-gray-500">1999 08 09</p>
+                <p class="font-semibold">by {{ recipeStore.currentRecipe?.AuthorName }}</p>
+                <p class="text-xs font-normal text-gray-500">
+                  {{ (new Date(recipeStore.currentRecipe?.DatePublished)).getDate() }}/{{ (new Date(recipeStore.currentRecipe?.DatePublished)).getMonth() }}/{{ (new Date(recipeStore.currentRecipe?.DatePublished)).getFullYear() }}
+                </p>
               </div>
               <div class="h-[25%]">
                 <button
@@ -40,6 +72,8 @@
               <div class="h-[20%]">
                 <div class="flex items-center justify-center w-full mb-4">
                   <svg
+                    v-for="i in Math.floor(recipeStore.currentRecipe?.AggregatedRating)"
+                    :key="i"
                     class="w-8 h-8 text-pr-light-orange me-1"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
@@ -51,39 +85,8 @@
                     />
                   </svg>
                   <svg
-                    class="w-8 h-8 text-pr-light-orange me-1"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path
-                      d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                    />
-                  </svg>
-                  <svg
-                    class="w-8 h-8 text-pr-light-orange me-1"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path
-                      d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                    />
-                  </svg>
-                  <svg
-                    class="w-8 h-8 text-pr-light-orange me-1"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 22 20"
-                  >
-                    <path
-                      d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
-                    />
-                  </svg>
-                  <svg
+                    v-for="i in 5 - Math.floor(recipeStore.currentRecipe?.AggregatedRating)"
+                    :key="i"
                     class="w-8 h-8 text-gray-400 me-1"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +97,7 @@
                       d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z"
                     />
                   </svg>
-                  <p class="ml-2 font-medium text-gray-500 text-md">(32)</p>
+                  <p class="ml-2 font-medium text-gray-500 text-md">({{ recipeStore.currentRecipe?.ReviewCount }})</p>
                 </div>
                 <a href="#reviewSection" class="inline-block hover:underline underline-offset-2">
                   READ REVIEWS
@@ -105,10 +108,13 @@
         </div>
         <div class="block w-full h-full md:w-1/2">
           <img
-            src="https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/38/YUeirxMLQaeE1h3v3qnM_229%20berry%20blue%20frzn%20dess.jpg"
-            alt=""
-            class="object-cover w-full h-full"
-          />
+                v-if="recipeStore.currentRecipe.Images.length != 0"
+                :src="recipeStore.currentRecipe.Images[0]"
+                class="object-cover object-center w-full rounded-lg h-3/5"
+              />
+              <div v-else class="flex flex-col justify-center w-full h-3/5">
+                <img src="../assets/noImage.png" class="w-32 h-32 mx-auto" />
+              </div>
         </div>
       </section>
       <section class="flex flex-col justify-center w-3/5 mx-auto mt-12">
@@ -118,25 +124,25 @@
           <div class="flex justify-center">
             <div>
               <p class="font-bold">Prep Time:</p>
-              <p>45m</p>
+              <p>{{ timeFormat(recipeStore.currentRecipe?.PrepTime) }}</p>
             </div>
           </div>
           <div class="flex justify-center">
             <div>
               <p class="font-bold">Cook Time:</p>
-              <p>24m</p>
+              <p>{{ timeFormat(recipeStore.currentRecipe?.CookTime) }}</p>
             </div>
           </div>
           <div class="flex justify-center">
             <div>
               <p class="font-bold">Total Time:</p>
-              <p>1h45m</p>
+              <p>{{ timeFormat(recipeStore.currentRecipe?.TotalTime) }}</p>
             </div>
           </div>
           <div class="flex justify-center">
             <div>
               <p class="font-bold">Servings:</p>
-              <p>4</p>
+              <p>{{ recipeStore.currentRecipe.RecipeServings }}</p>
             </div>
           </div>
         </div>
@@ -147,121 +153,74 @@
           <div class="flex">
             <div>
               <p class="font-bold">Calories:</p>
-              <p>170.9</p>
+              <p>{{ recipeStore.currentRecipe.Calories }}</p>
             </div>
           </div>
           <div class="flex">
             <div>
               <p class="font-bold">Fat Content:</p>
-              <p>2.5</p>
-              <p class="font-normal">(Saturated Fat Content: 1.3)</p>
+              <p>{{ recipeStore.currentRecipe.FatContent }}</p>
+              <p class="font-normal">(Saturated Fat Content: {{ recipeStore.currentRecipe.SaturatedFatContent }})</p>
             </div>
           </div>
           <div class="flex">
             <div>
               <p class="font-bold">Cholesterol Content:</p>
-              <p>8.0</p>
+              <p>{{ recipeStore.currentRecipe.CholesterolContent }}</p>
             </div>
           </div>
           <div class="flex">
             <div>
               <p class="font-bold">Sodium Content:</p>
-              <p>29.8</p>
+              <p>{{ recipeStore.currentRecipe.SodiumContent }}</p>
             </div>
           </div>
           <div class="flex">
             <div>
               <p class="font-bold">Carbohydrate Content:</p>
-              <p>37.1</p>
+              <p>{{ recipeStore.currentRecipe.CarbohydrateContent }}</p>
             </div>
           </div>
           <div class="flex">
             <div>
               <p class="font-bold">Fiber Content:</p>
-              <p>3.6</p>
+              <p>{{ recipeStore.currentRecipe.FiberContent }}</p>
             </div>
           </div>
           <div class="flex">
             <div>
               <p class="font-bold">Sugar Content</p>
-              <p>30.2</p>
+              <p>{{ recipeStore.currentRecipe.SugarContent }}</p>
             </div>
           </div>
           <div class="flex">
             <div>
               <p class="font-bold">Protein Content:</p>
-              <p>3.2</p>
+              <p>{{ recipeStore.currentRecipe.ProteinContent }}</p>
             </div>
           </div>
         </div>
         <p class="mt-12">
-          Make and share this Low-Fat Berry Blue Frozen Dessert recipe from Food.com.
+          {{ recipeStore.currentRecipe.Description }}
         </p>
         <div class="mt-12">
           <p class="pb-4 text-3xl font-bold border-b-2 border-pr-light-pink">Ingredients</p>
           <ul class="p-6 leading-loose list-disc">
-            <li class="text-pr-light-pink">
-              <p class="text-black">4 Blueberries</p>
-            </li>
-            <li class="text-pr-light-pink">
-              <p class="text-black">1/4 Granulated sugar</p>
-            </li>
-            <li class="text-pr-light-pink">
-              <p class="text-black">1 Vanilla yogurt</p>
-            </li>
-            <li class="text-pr-light-pink">
-              <p class="text-black">1 Lemon juice</p>
+            <li class="text-pr-light-pink" v-for="parts in createIngList(recipeStore.currentRecipe.RecipeIngredientQuantities, recipeStore.currentRecipe.RecipeIngredientParts)" :key="parts.p">
+              <p class="text-black">{{ parts.q }} {{ parts.p }}</p>
             </li>
           </ul>
         </div>
         <div class="mt-12">
           <p class="pb-4 text-3xl font-bold border-b-2 border-pr-light-pink">Instructions</p>
           <ul class="p-6 leading-loose list-disc text-pr-light-pink">
-            <li class="mb-4">
-              <p class="font-bold text-black">Step 1</p>
-              <p class="text-black">Toss 2 cups berries with sugar.</p>
-            </li>
-            <li class="mb-4">
-              <p class="font-bold text-black">Step 2</p>
-              <p class="text-black">Let stand for 45 minutes, stirring occasionally.</p>
-            </li>
-            <li class="mb-4">
-              <p class="font-bold text-black">Step 3</p>
-              <p class="text-black">Transfer berry-sugar mixture to food processor.</p>
-            </li>
-            <li class="mb-4">
-              <p class="font-bold text-black">Step 4</p>
-              <p class="text-black">Add yogurt and process until smooth.</p>
-            </li>
-            <li class="mb-4">
-              <p class="font-bold text-black">Step 5</p>
-              <p class="text-black">
-                Strain through fine sieve. Pour into baking pan (or transfer to ice cream maker and
-                process according to manufacturers' directions). Freeze uncovered until edges are
-                solid but centre is soft. Transfer to processor and blend until smooth again.
-              </p>
-            </li>
-            <li class="mb-4">
-              <p class="font-bold text-black">Step 6</p>
-              <p class="text-black">Return to pan and freeze until edges are solid.</p>
-            </li>
-            <li class="mb-4">
-              <p class="font-bold text-black">Step 7</p>
-              <p class="text-black">Transfer to processor and blend until smooth again.</p>
-            </li>
-            <li class="mb-4">
-              <p class="font-bold text-black">Step 8</p>
-              <p class="text-black">Fold in remaining 2 cups of blueberries.</p>
-            </li>
-            <li class="mb-4">
-              <p class="font-bold text-black">Step 9</p>
-              <p class="text-black">
-                Pour into plastic mold and freeze overnight. Let soften slightly to serve.
-              </p>
+            <li class="mb-4" v-for="(step, i) in recipeStore.currentRecipe.RecipeInstructions" :key="i">
+              <p class="font-bold text-black">Step {{ i+1 }}</p>
+              <p class="text-black">{{ step }}</p>
             </li>
           </ul>
         </div>
-        <div class="flex flex-col justify-center my-12" id="reviewSection">
+        <!-- <div class="flex flex-col justify-center my-12" id="reviewSection">
           <p class="pb-4 text-3xl font-bold border-b-2 border-pr-light-pink">Reviews</p>
           <ul>
             <li class="pb-4 my-8 border-b-2 border-gray-300">
@@ -465,7 +424,7 @@
           >
             LOAD MORE REVIEWS
           </button>
-        </div>
+        </div> -->
       </section>
     </div>
   </div>

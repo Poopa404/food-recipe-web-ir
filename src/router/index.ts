@@ -5,25 +5,27 @@ import SignupPageVue from '@/views/SignupPage.vue'
 import SearchPageVue from '@/views/SearchPage.vue'
 import RecsViewVue from '@/views/recs/RecsView.vue'
 import ProfilePage from '@/views/ProfilePage.vue'
+import { useRecipeStore } from '@/stores/recipe'
+import IRService from '@/services/IRService'
 
 const folderList = [
   {
-      id:0,
-      linkName: 'recsHealthy',
-      label: 'Healthy',
-      url: 'healthy'
+    id: 0,
+    linkName: 'recsHealthy',
+    label: 'Healthy',
+    url: 'healthy'
   },
   {
-      id:1,
-      linkName: 'recsLunch',
-      label: 'Lunch',
-      url: 'lunch'
+    id: 1,
+    linkName: 'recsLunch',
+    label: 'Lunch',
+    url: 'lunch'
   },
   {
-      id:2,
-      linkName: 'recsDessert',
-      label: 'Dessert',
-      url: 'dessert'
+    id: 2,
+    linkName: 'recsDessert',
+    label: 'Dessert',
+    url: 'dessert'
   },
 ]
 
@@ -47,7 +49,7 @@ for (let i = 0; i < folderList.length; i++) {
     name: element.linkName,
     component: RecsViewVue
   })
-  
+
 }
 
 const router = createRouter({
@@ -60,9 +62,19 @@ const router = createRouter({
       children: childrenTag,
     },
     {
-      path: '/search',
+      path: '/search/:query_term',
       name: 'search',
       component: SearchPageVue,
+      props: true,
+      beforeEnter: async (to) => {
+        const query_term: string = to.params.query_term as string
+        const recipeStore = useRecipeStore()
+        await IRService.search(query_term)
+          .then((response) => {
+            recipeStore.setCurrentResponse(response.data)
+            console.log(recipeStore.res)
+          })
+      }
     },
     {
       path: '/profile',

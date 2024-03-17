@@ -4,7 +4,7 @@ import navBarVue from '@/components/NavBar.vue'
 import { ref } from 'vue'
 import ContextMenu from '@/components/ContextMenu.vue'
 import { onClickOutside } from '@vueuse/core'
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@/stores/auth'
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -57,17 +57,16 @@ function handleActionClick(action: any) {
   console.log(targetRow.value)
 }
 
-
 const target = ref(null)
-onClickOutside(target, event => {
+onClickOutside(target, (event) => {
   closeContextMenu()
 })
 
 const authStore = useAuthStore()
 
 function loginAndThenSave(event: any, user: any) {
-  if(authStore.isLoggedIn){
-    showContextMenu(event,user)
+  if (authStore.isLoggedIn) {
+    showContextMenu(event, user)
   } else {
     router.push({ name: 'login' })
   }
@@ -75,24 +74,22 @@ function loginAndThenSave(event: any, user: any) {
 
 const isModalShown = ref(false)
 
-function showModal(){
-  if(isModalShown.value){
+function showModal() {
+  if (isModalShown.value) {
     isModalShown.value = false
   } else {
     isModalShown.value = true
   }
 }
 
-function closeModal(){
+function closeModal() {
   isModalShown.value = false
 }
-
 </script>
 
 <template>
-  
   <navBarVue />
-  <recipeModalVue :class="isModalShown? 'flex':'hidden'" @close-modal="closeModal"/>
+  <recipeModalVue :class="isModalShown ? 'flex' : 'hidden'" @close-modal="closeModal" />
   <ContextMenu
     ref="target"
     v-if="showMenu"
@@ -129,7 +126,7 @@ function closeModal(){
           <p>{{ folder.label }}</p>
         </RouterLink>
       </div>
-      <div class="grid w-full grid-cols-4 mt-8 mb-8 gap-x-4 gap-y-16 ">
+      <div class="grid w-full grid-cols-4 mt-8 mb-8 gap-x-4 gap-y-16">
         <button
           @click="showModal"
           class="group transition hover:scale-[1.05] relative"
@@ -137,7 +134,7 @@ function closeModal(){
           :key="num"
         >
           <button
-            @click.prevent.stop="loginAndThenSave($event,num)"
+            @click.prevent.stop="loginAndThenSave($event, num)"
             class="absolute z-10 hidden px-2 py-2 rounded-lg hover:bg-pr-dark-pink right-2 top-2 group-hover:block bg-pr-light-pink text-pr-white"
           >
             <!-- <svg
@@ -248,4 +245,5 @@ function closeModal(){
 .overlay:hover {
   cursor: pointer;
 }
-</style>../components/RecipePage.vue
+</style>
+../components/RecipePage.vue

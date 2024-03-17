@@ -3,6 +3,8 @@ import { RouterLink } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import IRService from '@/services/IRService'
+import { useRecipeStore } from '@/stores/recipe'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -40,6 +42,22 @@ function dropdownTimeout() {
     }
   }, 2000)
 }
+
+const query_term = defineModel({
+  default: '',
+  type: String,
+})
+
+async function search(query: string){
+  // console.log(query_term.value)
+  const recipeStore = useRecipeStore()
+  await IRService.search(query)
+    .then((response) => {
+      console.log(response.data)
+      recipeStore.setCurrentResponse(response.data)
+      router.push({name: 'search', params: {query_term: query}})
+    })
+}
 </script>
 
 <template>
@@ -76,11 +94,12 @@ function dropdownTimeout() {
                 <span class="sr-only">Search icon</span>
               </div>
               <form
-                action=""
-                method="get"
+                @submit.prevent="search(query_term)"
                 class="block w-full text-sm text-gray-900 bg-gray-100 border border-gray-200 rounded-lg"
               >
                 <input
+                  v-model="query_term"
+                  required
                   type="text"
                   id="search-navbar"
                   class="w-10/12 p-2 bg-gray-100 rounded-l-lg ps-10"
