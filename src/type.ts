@@ -9,8 +9,15 @@ export interface Folder {
     id: number
     name: string
     userAccount: User
-    recipeList: string[]
+    recipeList: RatedItem[]
     baseFolder: boolean
+}
+
+export interface RatedItem {
+    id: number
+    recipeId: string
+    stars: number
+    folder: Folder
 }
 
 export interface Recipe {

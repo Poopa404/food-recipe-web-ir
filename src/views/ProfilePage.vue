@@ -138,8 +138,8 @@ onClickOutside(target, (event) => {
             </button>
           </div>
           <div class="grid w-full grid-cols-6 mt-8 gap-x-16 gap-y-8">
-            <a
-              href="#"
+            <RouterLink
+              :to="{ name: 'folder', params: { folder: folder.id } }"
               class="group transition hover:scale-[1.05]"
               v-for="folder in folderList"
               :key="folder.id"
@@ -174,7 +174,7 @@ onClickOutside(target, (event) => {
               />
               <img v-else src="../assets/folder.png" class="" alt="" srcset="" />
               <p class="font-semibold">{{ folder.name }}</p>
-            </a>
+            </RouterLink>
           </div>
         </div>
       </div>

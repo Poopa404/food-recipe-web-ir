@@ -1,4 +1,4 @@
-import type {Folder} from '@/type'
+import type {Folder, RatedItem} from '@/type'
 import apiClient from "@/services/AxiosClient";
 import type {AxiosResponse} from "axios";
 
@@ -25,4 +25,7 @@ export default {
     deleteFolder(id: number): Promise<AxiosResponse> {
         return apiClient.post('/folder/delete/'+id.toString())
     },
+    saveItem(item: RatedItem): Promise<AxiosResponse<RatedItem>>{
+        return apiClient.post<RatedItem>('/ratedItem', item)
+    }
 }

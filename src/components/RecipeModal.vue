@@ -215,7 +215,7 @@ function createIngList(quan: string[], parts: string[]){
           <p class="pb-4 text-3xl font-bold border-b-2 border-pr-light-pink">Instructions</p>
           <ul class="p-6 leading-loose list-disc text-pr-light-pink">
             <li class="mb-4" v-for="(step, i) in recipeStore.currentRecipe.RecipeInstructions" :key="i">
-              <p class="font-bold text-black">Step {{ i+1 }}</p>
+              <!-- <p class="font-bold text-black">Step {{ i+1 }}</p> -->
               <p class="text-black">{{ step }}</p>
             </li>
           </ul>

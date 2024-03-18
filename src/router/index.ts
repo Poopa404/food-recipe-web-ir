@@ -7,6 +7,8 @@ import RecsViewVue from '@/views/recs/RecsView.vue'
 import ProfilePage from '@/views/ProfilePage.vue'
 import { useRecipeStore } from '@/stores/recipe'
 import IRService from '@/services/IRService'
+import FolderPage from '@/views/FolderPage.vue'
+import FolderService from '@/services/FolderService'
 
 const folderList = [
   {
@@ -80,6 +82,36 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfilePage,
+    },
+    {
+      path: '/profile/:folder',
+      name: 'folder',
+      component: FolderPage,
+      props: true,
+      beforeEnter: async (to) => {
+        const folder: number = parseInt(to.params.folder as string)
+        const recipeStore = useRecipeStore()
+        await FolderService.getFoldersById(folder).then(async (responseFolder) => {
+          recipeStore.setCurrentFolder(responseFolder.data)
+          console.log(responseFolder.data)
+          if (responseFolder.data != null && responseFolder.data.recipeList != null && responseFolder.data.recipeList.length != 0) {
+            const idList: number[] = []
+            responseFolder.data.recipeList.forEach(element => {
+              console.log(element.recipeId)
+              console.log(parseInt(element.recipeId))
+              idList.push(parseInt(element.recipeId))
+            });
+            console.log(idList)
+            console.log(responseFolder.data.recipeList)
+            await IRService.get_recipes(idList).then((response) => {
+              console.log(response.data.list)
+              recipeStore.setCurrentItemInFolder(response.data.list)
+            })
+          }
+
+        })
+
+      }
     },
     {
       path: '/login',

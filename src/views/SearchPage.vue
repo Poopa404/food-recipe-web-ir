@@ -1,48 +1,110 @@
 <script setup lang="ts">
 import recipeModalVue from '@/components/RecipeModal.vue'
 import navBarVue from '@/components/NavBar.vue'
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import ContextMenu from '@/components/ContextMenu.vue'
 import { onClickOutside } from '@vueuse/core'
 import { useAuthStore } from '@/stores/auth'
-
 import { onBeforeRouteUpdate, useRouter } from 'vue-router'
 import { useRecipeStore } from '@/stores/recipe'
 import IRService from '@/services/IRService'
-import type { Recipe } from '@/type'
+import type { Folder, Recipe } from '@/type'
+import StarPrompt from '@/components/StarPrompt.vue'
+import FolderService from '@/services/FolderService'
+
 const router = useRouter()
 
 const showMenu = ref(false)
 const menuX = ref(0)
 const menuY = ref(0)
-const targetRow = ref({})
+const targetRow = ref('38')
 const contextMenuActions = ref([
-  { label: 'Edit', action: 'edit' },
-  { label: 'Delete', action: 'delete' }
+  {
+    label: 'New Folder',
+    action: 'new'
+  }
 ])
+
+const key_value = ref(0)
+const star_value = ref(5)
+
+const isStarShown = ref(false)
+
+const folderList: Ref<Array<Folder>> = ref([])
+
+const recipeStore = useRecipeStore()
+const query_term = ref('')
+const searched_recipe = ref<Array<Recipe>>([])
+const suggested_term = ref('')
+const needSuggestion = ref(false)
+
+const authStore = useAuthStore()
+const user = ref(authStore.user)
+
+function getFolderList() {
+  if (authStore.isLoggedIn && authStore.user != null) {
+    console.log('getFolderList')
+    FolderService.getFoldersByUID(authStore.user.id).then((response) => {
+      folderList.value = response.data
+      console.log(folderList.value)
+      contextMenuActions.value = [
+        {
+          label: 'Create New Folder',
+          action: 'new'
+        }
+      ]
+      folderList.value.forEach((fold) => {
+        if (fold.name !== 'All Saved Recipes') {
+          contextMenuActions.value.push({
+            label: fold.name,
+            action: '' + fold.id
+          })
+        }
+      })
+      console.log(contextMenuActions.value)
+    })
+  }
+}
+getFolderList()
+
 const showContextMenu = (event: any, user: any) => {
   event.preventDefault()
   showMenu.value = true
   targetRow.value = user
-  menuX.value = event.clientX
-  menuY.value = event.clientY
+  menuX.value = event.pageX
+  menuY.value = event.pageY
 }
 
 const closeContextMenu = () => {
   showMenu.value = false
 }
 
+const folderName = ref('')
+const currentAction = ref('')
 function handleActionClick(action: any) {
-  console.log(action)
-  console.log(targetRow.value)
+  if (user.value != null) {
+    if (action == 'new') {
+      let n = prompt('Please enter the folder name', 'new folder')
+      if (n == null || n.length == 0) {
+        folderName.value = 'new folder'
+      } else {
+        folderName.value = n
+      }
+      isStarShown.value = true
+      currentAction.value = 'new'
+      closeContextMenu()
+    } else {
+      isStarShown.value = true
+      currentAction.value = action
+      closeContextMenu()
+    }
+  }
 }
 
 const target = ref(null)
 onClickOutside(target, (event) => {
   closeContextMenu()
 })
-
-const authStore = useAuthStore()
 
 function loginAndThenSave(event: any, user: any) {
   if (authStore.isLoggedIn) {
@@ -70,12 +132,6 @@ function closeModal() {
   isModalShown.value = false
 }
 
-const recipeStore = useRecipeStore()
-const query_term = ref('')
-const searched_recipe = ref<Array<Recipe>>([])
-const suggested_term = ref('')
-const needSuggestion = ref(false)
-
 function setTerm() {
   needSuggestion.value = false
   if (recipeStore.res != null && recipeStore.res.suggest != null) {
@@ -97,9 +153,11 @@ function setTerm() {
     }
   }
 }
+
 setTerm()
 
 onBeforeRouteUpdate(() => {
+  getFolderList()
   setTerm()
 })
 
@@ -119,12 +177,51 @@ function correctTerm(corrected: string) {
   search(query_term.value)
 }
 
-const key_value = ref(0)
+function finishRatedItem() {
+  if (currentAction.value == 'new' && authStore.user != null) {
+    console.log(folderName.value)
+    console.log(authStore.user)
+    console.log(targetRow.value)
+    console.log(star_value.value)
+    FolderService.saveFolder({
+      id: 0,
+      name: folderName.value,
+      recipeList: [],
+      userAccount: authStore.user,
+      baseFolder: false
+    }).then((response) => {
+      console.log(response.data)
+      FolderService.saveItem({
+        id: 0,
+        recipeId: targetRow.value,
+        stars: star_value.value,
+        folder: response.data
+      }).then((res) => {
+        console.log(res.data)
+        router.go(0)
+      })
+    })
+  } else if (currentAction.value != 'new' && authStore.user != null) {
+    FolderService.getFoldersById(Number(currentAction.value)).then((response) => {
+      FolderService.saveItem({
+        id: 0,
+        recipeId: targetRow.value,
+        stars: star_value.value,
+        folder: response.data
+      }).then((res) => {
+        console.log(res.data)
+        router.go(0)
+      })
+    })
+  }
+  isStarShown.value = false
+}
 </script>
 
 <template>
   <div :key="key_value">
     <navBarVue v-model="query_term" />
+    <StarPrompt v-if="isStarShown" v-model="star_value" @confirm-score="finishRatedItem" />
     <recipeModalVue :class="isModalShown ? 'flex' : 'hidden'" @close-modal="closeModal" />
     <ContextMenu
       ref="target"
@@ -177,7 +274,12 @@ const key_value = ref(0)
             </form>
           </div>
           <p v-if="needSuggestion" class="mt-4 font-medium">
-            Did you mean <button class="italic font-bold text-pr-dark-blue hover:underline underline-offset-4" @click.prevent="correctTerm(suggested_term)">{{ suggested_term }}</button
+            Did you mean
+            <button
+              class="italic font-bold text-pr-dark-blue hover:underline underline-offset-4"
+              @click.prevent="correctTerm(suggested_term)"
+            >
+              {{ suggested_term }}</button
             >?
           </p>
         </div>
