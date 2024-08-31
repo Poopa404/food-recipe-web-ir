@@ -1,6 +1,7 @@
 # food-recipe-web-ir
 
-This template should help get you started developing with Vue 3 in Vite.
+[Java Backend](https://github.com/Poopa404/food-recipe-web-ir-backend)\
+[Flask API](https://github.com/Poopa404/food-recipe-web-ir-flask)
 
 ## Recommended IDE Setup
 
